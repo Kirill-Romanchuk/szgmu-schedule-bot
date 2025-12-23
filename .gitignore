@@ -1,0 +1,24 @@
+# Byte-compiled / C extensions
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenvs
+.venv/
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env

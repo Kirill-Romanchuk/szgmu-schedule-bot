@@ -1,0 +1,50 @@
+[project]
+name = "szgmu-schedule-bot"
+version = "0.1.0"
+description = "Telegram bot for providing university class schedules"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aiogram>=3.23.0",
+    "aiohttp>=3.13.2",
+    "alembic>=1.17.2",
+    "psycopg[binary]>=3.3.2",
+    "redis>=7.1.0",
+    "sqlalchemy>=2.0.45",
+]
+
+[project.optional-dependencies]
+lint = [
+    "ruff>=0.14.10",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+]
+lint = [
+    "ruff>=0.14.10",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    "__pypackages__",
+    "__pycache__",
+    "venv",
+    ".venv",
+    "migrations",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "Q", "I", "N", "S", "T20", "DJ", "ARG", "PTH"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
