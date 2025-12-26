@@ -1,6 +1,7 @@
 import logging
 
 from api.base_client import BaseAPIClient
+from api.endpoints import ScheduleEndpoint
 from api.schemas.requests import ScheduleFilters
 from api.schemas.responses import (
     PaginatedResponse,
@@ -13,20 +14,6 @@ logger = logging.getLogger(__name__)
 
 class ScheduleAPIClient(BaseAPIClient):
     """Client for university schedule API."""
-
-    def __init__(
-        self,
-        base_url: str = "https://frsview.szgmu.ru/api",
-        timeout: float = 30.0,
-        max_retries: int = 3,
-        retry_delay: float = 1.0,
-    ):
-        super().__init__(base_url, timeout, max_retries, retry_delay)
-        self._base_path = "/xlsxSchedule"
-
-    def _build_endpoint(self, path: str) -> str:
-        """Build full endpoint path."""
-        return f"{self._base_path}/{path.lstrip('/')}"
 
     async def get_schedules_page(
         self,
@@ -45,7 +32,7 @@ class ScheduleAPIClient(BaseAPIClient):
         Returns:
             PaginatedResponse with schedule summaries for the page
         """
-        endpoint = self._build_endpoint(f"findAll/{page}")
+        endpoint = ScheduleEndpoint.find_all(page)
 
         params = {
             "size": page_size,
@@ -84,7 +71,7 @@ class ScheduleAPIClient(BaseAPIClient):
         Returns:
             Detailed schedule information including lessons
         """
-        endpoint = self._build_endpoint("findById")
+        endpoint = ScheduleEndpoint.find_by_id()
         params = {"xlsxScheduleId": schedule_id}
 
         logger.info("Fetching details for schedule ID: %d", schedule_id)
@@ -159,9 +146,7 @@ class ScheduleAPIClient(BaseAPIClient):
         logger.info("Search completed, found %d schedules total", len(all_schedules))
         return all_schedules
 
-    async def get_all_schedules(
-        self,
-    ) -> list[XlsxScheduleSummary]:
+    async def get_all_schedules(self, max_pages=100) -> list[XlsxScheduleSummary]:
         """
         Get all available schedules (no filters).
 
@@ -169,4 +154,4 @@ class ScheduleAPIClient(BaseAPIClient):
             All schedule summaries
         """
         logger.info("Fetching all schedules")
-        return await self.search_schedules(filters=None, max_pages=100)
+        return await self.search_schedules(filters=None, max_pages=max_pages)
